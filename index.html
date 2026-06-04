@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Catalogo Imparable Hombre</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+:root {
+  --blue: #0066ff;
+  --black: #0a0a0a;
+  --ink: #f5f7fb;
+  --muted: #9aa3b2;
+  --line: rgba(255, 255, 255, 0.14);
+  --panel: #111318;
+  --panel-2: #171a21;
+  --white: #ffffff;
+  --red: #e81818;
+  --navy: #071733;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--black); color: var(--ink); font-family: Inter, Arial, sans-serif; }
+button, input, select { font: inherit; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px clamp(18px, 4vw, 54px);
+  background: rgba(10,10,10,0.86); border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+}
+.brand-mark { display: flex; align-items: center; gap: 10px; color: var(--white); font-size: clamp(24px,4vw,40px); font-weight: 900; font-style: italic; text-decoration: none; line-height: 1; }
+.brand-mark img { height: clamp(28px,3.5vw,42px); width: auto; }
+.brand-i { color: var(--blue); }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.cart-button { position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 1px solid var(--line); color: var(--white); background: var(--panel); cursor: pointer; border-radius: 0; }
+.cart-button:hover { background: var(--blue); border-color: var(--blue); }
+.cart-count { position: absolute; top: 6px; right: 6px; min-width: 18px; height: 18px; padding: 0 4px; background: var(--blue); color: #fff; font-size: 11px; font-weight: 900; font-style: normal; border-radius: 9px; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+
+.hero {
+  min-height: 420px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  padding: clamp(40px,6vw,80px) clamp(18px,4vw,54px);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(110deg, rgba(0,102,255,0.22), transparent 38%), radial-gradient(circle at 70% 10%, rgba(255,255,255,0.1), transparent 30%), #050505;
+}
+.hero-copy { max-width: 620px; }
+.section-kicker { margin: 0 0 12px; color: var(--blue); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.32em; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: 18px; color: var(--white); font-size: clamp(64px,12vw,156px); font-style: italic; font-weight: 900; line-height: 0.86; }
+h1::first-letter { color: var(--blue); }
+.hero-text { max-width: 520px; color: #d9dee8; font-size: clamp(18px,2vw,24px); line-height: 1.45; margin: 0; }
+
+.controls {
+  display: grid; grid-template-columns: minmax(240px,1fr) minmax(160px,260px) minmax(160px,220px);
+  gap: 12px; padding: 24px clamp(18px,4vw,54px);
+  border-bottom: 1px solid var(--line); background: #090a0d;
+}
+label span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+input, select { width: 100%; min-height: 46px; border: 1px solid var(--line); border-radius: 0; padding: 0 14px; color: var(--white); background: var(--panel); }
+
+.summary-band { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 1px; padding: 1px; background: var(--line); }
+.summary-item { min-height: 112px; padding: 20px; background: #0d0f14; cursor: pointer; border: none; text-align: left; }
+.summary-item strong { display: block; margin-bottom: 8px; color: var(--white); font-size: 28px; }
+.summary-item span { color: var(--muted); font-size: 13px; font-weight: 800; text-transform: uppercase; }
+
+.catalog { padding: clamp(24px,4vw,54px); }
+.product-group { margin-bottom: 64px; }
+.group-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+h2 { margin-bottom: 0; color: var(--white); font-size: clamp(30px,5vw,64px); font-weight: 900; text-transform: uppercase; }
+.group-count { color: var(--muted); font-weight: 800; }
+
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 16px; }
+.product-card { min-width: 0; overflow: hidden; background: var(--panel); border: 1px solid var(--line); }
+.image-wrap { aspect-ratio: 1/1.16; display: grid; place-items: center; background: #0a0a0a; }
+.image-wrap img { width: 100%; height: 100%; object-fit: contain; }
+.product-body { padding: 16px; }
+.product-title-row { display: grid; grid-template-columns: minmax(0,1fr) 18px; align-items: start; gap: 10px; }
+h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25; text-transform: uppercase; }
+.color-dot { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.34); }
+.product-meta { min-height: 22px; margin-bottom: 14px; color: var(--muted); font-size: 13px; font-weight: 700; }
+.price-field input { color: var(--blue); font-size: 22px; font-weight: 900; }
+.empty-state { padding: 50px; color: var(--muted); border: 1px solid var(--line); text-align: center; }
+
+@media (max-width: 860px) {
+  .controls { grid-template-columns: 1fr; }
+  .hero { min-height: auto; }
+}
+@media (max-width: 520px) {
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .nav-actions { width: 100%; }
+  .primary-button { flex: 1; }
+  .catalog { padding-inline: 12px; }
+}
+@media print {
+  .topbar, .controls, .summary-band, .icon-button, .primary-button { display: none; }
+  body { background: white; color: black; }
+  .hero { min-height: 0; padding: 24px; border: 0; background: white; }
+  h1, h2, h3, .hero-text, .group-count { color: black; }
+  .product-card, .image-wrap, input { border-color: #d0d4dc; background: white; color: black; }
+}
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand-mark" href="#inicio" aria-label="Inicio Imparable">
+        <img src="assets/brand/isotipo.png" alt="Imparable" />
+        <span><span class="brand-i">i</span>mparable</span>
+      </a>
+      <nav class="nav-actions">
+        <button class="cart-button" id="cartBtn" type="button" title="Carrito">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="inicio">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="section-kicker">Catalogo hombre</p>
+          <h1>imparable</h1>
+          <p class="hero-text">Ropa diseñada para hombres que no se detienen.</p>
+        </div>
+      </section>
+
+      <section class="controls">
+        <label class="search-field">
+          <span>Buscar</span>
+          <input id="searchInput" type="search" placeholder="Producto, diseño o color" />
+        </label>
+        <label>
+          <span>Diseño</span>
+          <select id="designFilter"></select>
+        </label>
+        <label>
+          <span>Color</span>
+          <select id="colorFilter"></select>
+        </label>
+      </section>
+
+      <section class="catalog" id="catalog"></section>
+    </main>
+
+    <template id="groupTemplate">
+      <section class="product-group">
+        <div class="group-heading">
+          <div>
+            <p class="section-kicker"></p>
+            <h2></h2>
+          </div>
+          <span class="group-count"></span>
+        </div>
+        <div class="product-grid"></div>
+      </section>
+    </template>
+
+    <template id="cardTemplate">
+      <article class="product-card">
+        <div class="image-wrap">
+          <img loading="lazy" alt="" />
+        </div>
+        <div class="product-body">
+          <div class="product-title-row">
+            <h3></h3>
+            <span class="color-dot"></span>
+          </div>
+          <p class="product-meta"></p>
+          <label class="price-field">
+            <span>Precio</span>
+            <input inputmode="decimal" placeholder="$ ___" />
+          </label>
+        </div>
+      </article>
+    </template>
+
+    <script>
+const STORAGE_KEY = "imparable-catalog-prices-v1";
+const COLOR_MAP = { blanco:"#ffffff", negro:"#0a0a0a", rojo:"#e81818", rey:"#0066ff", "azul oscuro":"#071733" };
+const DESIGN_ORDER = [
+  "Camiseta Ultra Fit Manga Corta","Camiseta Ultra Fit Manga Larga","Licra Larga","Licra Corta",
+  "Sweater","Pantaloneta Corta Fit","Pantaloneta Corte Basico","Camiseta Basica Algodon",
+  "Camiseta Basica Fit Sin Mangas","Camiseta Imparable","Camiseta Olimpica",
+  "Camiseta Oversize Con Mangas","Camiseta Oversize Sin Mangas","Otros"
+];
+
+const FILES = [
+  "Camiseta basica algodon azul oscuro imparable.png",
+  "Camiseta basica algodon blanco imparable.png",
+  "Camiseta basica algodon negro imparable.png",
+  "Camiseta basica algodon rojo imparable.png",
+  "Camiseta basica fit sin mangas blanca imparable.png",
+  "Camiseta basica fit sin mangas negro imparable.png",
+  "Camiseta basica fit sin mangas rojo imparable.png",
+  "Camiseta basica lagodon azul rey imparable.png",
+  "Camiseta con mangas oversize azul oscuro imparable.png",
+  "Camiseta imparable color azul oscuro.png",
+  "Camiseta imparable color azul rey.png",
+  "Camiseta imparable color blanco.png",
+  "camiseta imparable color rojo.png",
+  "camiseta olimpica de hombre azul oscuro.png",
+  "Camiseta olimpica de hombre azul rey.png",
+  "Camiseta olimpica de hombre blanco.png",
+  "Camiseta olimpica de hombre negro.png",
+  "Camiseta olimpica de hombre rojo.png",
+  "camiseta oversize con manga rojo imparable.png",
+  "camiseta oversize con mangas blanco imparable.png",
+  "Camiseta oversize con mangas rey imparable.png",
+  "Camiseta oversize sin mangas azul oscuro imparable.png",
+  "camiseta oversize sin mangas blanco imparable.png",
+  "camiseta oversize sin mangas negro imparable.png",
+  "camiseta oversize sin mangas rojo imparable.png",
+  "Camiseta sin mangas oversize azul rey imparable.png",
+  "Camiseta ultra fit manga corta color blanco imparable.png",
+  "camiseta ultra fit manga corta color rey imparable.png",
+  "Camiseta ultra fit manga corta color rojo imparable.png",
+  "Camiseta ultra fit manga corte color negro imparable.png",
+  "Camiseta ultra fit manga larga color blanco imparable.png",
+  "Camiseta ultra fit manga larga color negro imparable.png",
+  "Camiseta ultra fit manga larga color rojo imparable.png",
+  "Camistea basica fit sin mangas azul rey imparable.png",
+  "Camiseta imparable color nego.png",
+  "Camistea ultra fit manga larga color azul oscuro imprabale.png",
+  "Camsieta basica fit sin mangas azul oscuro imparable.png",
+  "Cmaiseta oversize con mangas negro imparable.png",
+  "Cmaiseta ultra fit manga corta color azul oscuro imparable .png",
+  "Cmaiseta ultra fit manga larga color rey imparable.png",
+  "Licra corta color azul oscuro imparable.png",
+  "Licra corta color blanco imparable.png",
+  "Licra corta color negro imparable.png",
+  "Licra corta color rey imparav.png",
+  "Licra corta color rojo imparable.png",
+  "Licra larga color negro imparable.png",
+  "Licra larga color rojo imparable.png",
+  "Licra larga de hombre color azul oscuro imparable.png",
+  "Licra larga de hombre color blanco imparable.png",
+  "Licra larga de hombre color rey imparable.png",
+  "Panataloneta corta fit rey imparable.png",
+  "Panatloneta corte basico azul oscuro imparable.png",
+  "Pantaloneta basica azul rey imparable.png",
+  "Pantaloneta corta fit azul oscuro imparable.png",
+  "Pantaloneta corta fit negro imparable.png",
+  "Pantaloneta corta fit rojo imparable.png",
+  "Pantaloneta corte basico blanco imparable.png",
+  "Pantaloneta corte basico negro imparable.png",
+  "Pantaloneta corte basico rojo imparable.png",
+  "Pnataloneta corta fit blanca imparable.png",
+  "Sweter azul oscuro imparable.png",
+  "Sweter color blanco imparable.png",
+  "Sweter color rey imparable.png",
+  "Sweter color rojo imparable.png",
+  "Sweter de hombre color negro imparable.png"
+];
+
+const state = { search:"", design:"Todos", color:"Todos", prices: loadPrices() };
+const products = FILES.map((file, i) => buildProduct(file, i));
+
+const els = {
+  catalog: document.querySelector("#catalog"),
+  designFilter: document.querySelector("#designFilter"),
+  colorFilter: document.querySelector("#colorFilter"),
+  searchInput: document.querySelector("#searchInput"),
+  groupTemplate: document.querySelector("#groupTemplate"),
+  cardTemplate: document.querySelector("#cardTemplate"),
+  cartBtn: document.querySelector("#cartBtn"),
+  cartCount: document.querySelector("#cartCount"),
+};
+
+populateFilters();
+bindEvents();
+render();
+
+function bindEvents() {
+  els.searchInput.addEventListener("input", e => { state.search = e.target.value.trim().toLowerCase(); render(); });
+  els.designFilter.addEventListener("change", e => { state.design = e.target.value; render(); });
+  els.colorFilter.addEventListener("change", e => { state.color = e.target.value; render(); });
+  els.cartBtn.addEventListener("click", openCart);
+}
+
+function populateFilters() {
+  const designs = ["Todos", ...DESIGN_ORDER.filter(d => products.some(p => p.design === d))];
+  const colors = ["Todos", ...unique(products.map(p => p.colorLabel))];
+  els.designFilter.replaceChildren(...designs.map(mkOption));
+  els.colorFilter.replaceChildren(...colors.map(mkOption));
+}
+
+function render() {
+  const visible = products.filter(matches);
+  const grouped = groupProducts(visible);
+  els.catalog.replaceChildren();
+  if (!visible.length) {
+    const d = document.createElement("div");
+    d.className = "empty-state";
+    d.textContent = "No hay productos con esos filtros.";
+    els.catalog.append(d);
+    return;
+  }
+  grouped.forEach(([design, items], i) => {
+    const g = els.groupTemplate.content.cloneNode(true);
+    g.querySelector(".section-kicker").textContent = String(i+1).padStart(2,"0");
+    g.querySelector("h2").textContent = design;
+    g.querySelector(".group-count").textContent = `${items.length} producto${items.length===1?"":"s"}`;
+    const grid = g.querySelector(".product-grid");
+    items.forEach(p => grid.append(renderCard(p)));
+    els.catalog.append(g);
+  });
+}
+
+
+function renderCard(product) {
+  const card = els.cardTemplate.content.cloneNode(true);
+  card.querySelector("img").src = "assets/products/" + encodeURIComponent(product.file);
+  card.querySelector("img").alt = product.name;
+  card.querySelector("h3").textContent = product.name;
+  card.querySelector(".product-meta").textContent = `${product.design} / ${product.colorLabel}`;
+  card.querySelector(".color-dot").style.background = product.colorHex;
+  const input = card.querySelector("input");
+  input.value = state.prices[product.id] || "";
+  input.dataset.productId = product.id;
+  input.addEventListener("input", e => { state.prices[product.id] = e.target.value; savePrices(); });
+  return card;
+}
+
+function matches(p) {
+  const q = `${p.name} ${p.design} ${p.colorLabel}`.toLowerCase();
+  return (!state.search || q.includes(state.search))
+    && (state.design==="Todos" || p.design===state.design)
+    && (state.color==="Todos" || p.colorLabel===state.color);
+}
+
+function buildProduct(file, i) {
+  const n = normalize(file);
+  return { id:`IMP-${String(i+1).padStart(3,"0")}`, file, name: titleCase(file.replace(/\.png$/i,"").trim()), design: detectDesign(n), colorLabel: detectColor(n), colorHex: COLOR_MAP[detectColor(n)] || "#8b95a5" };
+}
+
+function detectDesign(t) {
+  if (t.includes("ultra fit") && t.includes("manga corta")) return "Camiseta Ultra Fit Manga Corta";
+  if (t.includes("ultra fit") && (t.includes("manga larga")||t.includes("manga corte"))) return t.includes("manga corte") ? "Camiseta Ultra Fit Manga Corta" : "Camiseta Ultra Fit Manga Larga";
+  if (t.includes("licra larga")) return "Licra Larga";
+  if (t.includes("licra corta")) return "Licra Corta";
+  if (t.includes("sweter")||t.includes("sweater")) return "Sweater";
+  if (t.includes("pantaloneta corta fit")||t.includes("pnataloneta corta fit")||t.includes("panataloneta corta fit")) return "Pantaloneta Corta Fit";
+  if (t.includes("pantaloneta corte basico")||t.includes("panatloneta corte basico")||t.includes("pantaloneta basica")) return "Pantaloneta Corte Basico";
+  if (t.includes("basica algodon")||t.includes("basica lagodon")) return "Camiseta Basica Algodon";
+  if (t.includes("oversize") && (t.includes("con manga")||t.includes("con mangas"))) return "Camiseta Oversize Con Mangas";
+  if (t.includes("oversize") && t.includes("sin mangas")) return "Camiseta Oversize Sin Mangas";
+  if (t.includes("oversize")) return "Camiseta Oversize Con Mangas";
+  if (t.includes("basica fit sin mangas")||t.includes("sin mangas")) return "Camiseta Basica Fit Sin Mangas";
+  if (t.includes("camiseta imparable")) return "Camiseta Imparable";
+  if (t.includes("olimpica")) return "Camiseta Olimpica";
+  return "Otros";
+}
+
+function detectColor(t) {
+  if (t.includes("azul oscuro")) return "azul oscuro";
+  if (t.includes("azul rey")||t.includes("color rey")||/ rey[ .]/.test(t)) return "rey";
+  if (t.includes("blanco")||t.includes("blanca")) return "blanco";
+  if (t.includes("negro")||t.includes("nego")) return "negro";
+  if (t.includes("rojo")) return "rojo";
+  return "sin color";
+}
+
+function groupProducts(items) {
+  const map = new Map();
+  items.forEach(p => { if (!map.has(p.design)) map.set(p.design,[]); map.get(p.design).push(p); });
+  return [...map.entries()].sort((a,b) => DESIGN_ORDER.indexOf(a[0])-DESIGN_ORDER.indexOf(b[0]));
+}
+
+function mkOption(v) { const o = document.createElement("option"); o.value = o.textContent = v; return o; }
+function unique(arr) { return [...new Set(arr)].sort((a,b) => a.localeCompare(b,"es")); }
+function normalize(v) { return v.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\.png$/i,""); }
+function titleCase(v) { return v.toLowerCase().split(" ").map(w => w ? w[0].toUpperCase()+w.slice(1) : w).join(" "); }
+function loadPrices() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY))||{}; } catch { return {}; } }
+function savePrices() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.prices)); }
+
+const cart = [];
+
+function openCart() {
+  alert(cart.length ? `Carrito: ${cart.length} producto(s)` : "El carrito está vacío.");
+}
+
+function addToCart(product) {
+  cart.push(product);
+  els.cartCount.textContent = cart.length;
+}
+    </script>
+  </body>
+</html>
