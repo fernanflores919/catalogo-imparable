@@ -418,18 +418,25 @@ function renderCard(product) {
   let selectedSize = null;
   const sizeBtns = card.querySelectorAll(".size-btn");
   const addBtn = card.querySelector(".add-cart-btn");
-  addBtn.disabled = true;
+  const sizeRow = card.querySelector(".size-row");
+
   sizeBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       sizeBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       selectedSize = btn.dataset.size;
-      addBtn.disabled = false;
+      sizeRow.style.outline = "";
     });
   });
 
   // Agregar al carrito
   addBtn.addEventListener("click", () => {
+    if (!selectedSize) {
+      sizeRow.style.outline = "2px solid #e81818";
+      sizeRow.style.padding = "6px";
+      setTimeout(() => { sizeRow.style.outline = ""; sizeRow.style.padding = ""; }, 1500);
+      return;
+    }
     addToCart(product, selectedSize);
     addBtn.textContent = "✓ Agregado";
     addBtn.style.background = "#16a34a";
