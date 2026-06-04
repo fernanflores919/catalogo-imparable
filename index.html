@@ -84,6 +84,53 @@ h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25
 .price-field input { color: var(--blue); font-size: 22px; font-weight: 900; }
 .empty-state { padding: 50px; color: var(--muted); border: 1px solid var(--line); text-align: center; }
 
+/* Preview button */
+.image-wrap { position: relative; }
+.preview-btn { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+.product-card:hover .preview-btn { opacity: 1; }
+
+/* Price */
+.product-price { color: var(--blue); font-size: 20px; font-weight: 900; margin: 0 0 12px; min-height: 28px; }
+
+/* Tallas */
+.size-row { margin-bottom: 12px; }
+.size-label { display: block; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
+.size-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.size-btn { min-width: 36px; height: 34px; padding: 0 6px; background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 800; cursor: pointer; }
+.size-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+/* Add to cart */
+.add-cart-btn { width: 100%; padding: 12px; background: var(--blue); border: none; color: #fff; font-size: 14px; font-weight: 900; cursor: pointer; letter-spacing: 0.05em; }
+.add-cart-btn:hover { background: #0052cc; }
+.add-cart-btn:disabled { background: var(--panel-2); color: var(--muted); cursor: not-allowed; }
+
+/* Lightbox */
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; display: flex; align-items: center; justify-content: center; }
+.lightbox.hidden { display: none; }
+.lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; }
+.lightbox-close { position: absolute; top: 20px; right: 24px; background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; }
+
+/* Cart panel */
+.cart-panel { position: fixed; top: 0; right: 0; width: 380px; max-width: 100vw; height: 100vh; background: #0d0f14; border-left: 1px solid var(--line); z-index: 90; display: flex; flex-direction: column; transform: translateX(0); transition: transform 0.3s; }
+.cart-panel.hidden { transform: translateX(100%); }
+.cart-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+.cart-header h2 { margin: 0; color: var(--white); font-size: 20px; }
+.cart-header button { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; }
+.cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+.cart-item { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.cart-item img { width: 64px; height: 64px; object-fit: contain; background: #111; }
+.cart-item-info p { margin: 0; font-size: 13px; }
+.cart-item-info .ci-name { color: var(--white); font-weight: 700; font-size: 13px; line-height: 1.3; }
+.cart-item-info .ci-meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.cart-item-remove { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px; }
+.cart-item-remove:hover { color: var(--red); }
+.cart-empty { color: var(--muted); text-align: center; padding: 40px 0; font-size: 14px; }
+.cart-footer { padding: 20px 24px; border-top: 1px solid var(--line); }
+.cart-total { display: flex; justify-content: space-between; color: var(--white); font-weight: 800; margin-bottom: 16px; font-size: 16px; }
+.cart-order-btn { width: 100%; padding: 14px; background: var(--blue); border: none; color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; }
+.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 89; }
+.cart-overlay.hidden { display: none; }
+
 @media (max-width: 860px) {
   .controls { grid-template-columns: 1fr; }
   .hero { min-height: auto; }
@@ -161,6 +208,9 @@ h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25
       <article class="product-card">
         <div class="image-wrap">
           <img loading="lazy" alt="" />
+          <button class="preview-btn" type="button" title="Ver imagen">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </button>
         </div>
         <div class="product-body">
           <div class="product-title-row">
@@ -168,13 +218,39 @@ h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25
             <span class="color-dot"></span>
           </div>
           <p class="product-meta"></p>
-          <label class="price-field">
-            <span>Precio</span>
-            <input inputmode="decimal" placeholder="$ ___" />
-          </label>
+          <p class="product-price"></p>
+          <div class="size-row">
+            <span class="size-label">Talla</span>
+            <div class="size-options">
+              <button class="size-btn" data-size="XS">XS</button>
+              <button class="size-btn" data-size="S">S</button>
+              <button class="size-btn" data-size="M">M</button>
+              <button class="size-btn" data-size="L">L</button>
+              <button class="size-btn" data-size="XL">XL</button>
+              <button class="size-btn" data-size="XXL">XXL</button>
+            </div>
+          </div>
+          <button class="add-cart-btn" type="button">+ Agregar al carrito</button>
         </div>
       </article>
     </template>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox hidden">
+      <button class="lightbox-close" id="lightboxClose">✕</button>
+      <img id="lightboxImg" src="" alt="" />
+    </div>
+
+    <!-- Carrito panel -->
+    <div id="cartPanel" class="cart-panel hidden">
+      <div class="cart-header">
+        <h2>Carrito</h2>
+        <button id="cartClose" type="button">✕</button>
+      </div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-footer" id="cartFooter"></div>
+    </div>
+    <div id="cartOverlay" class="cart-overlay hidden"></div>
 
     <script>
 const STORAGE_KEY = "imparable-catalog-prices-v1";
@@ -256,6 +332,7 @@ const FILES = [
 
 const state = { search:"", design:"Todos", color:"Todos", prices: loadPrices() };
 const products = FILES.map((file, i) => buildProduct(file, i));
+const cart = [];
 
 const els = {
   catalog: document.querySelector("#catalog"),
@@ -266,6 +343,14 @@ const els = {
   cardTemplate: document.querySelector("#cardTemplate"),
   cartBtn: document.querySelector("#cartBtn"),
   cartCount: document.querySelector("#cartCount"),
+  lightbox: document.querySelector("#lightbox"),
+  lightboxImg: document.querySelector("#lightboxImg"),
+  lightboxClose: document.querySelector("#lightboxClose"),
+  cartPanel: document.querySelector("#cartPanel"),
+  cartClose: document.querySelector("#cartClose"),
+  cartItems: document.querySelector("#cartItems"),
+  cartFooter: document.querySelector("#cartFooter"),
+  cartOverlay: document.querySelector("#cartOverlay"),
 };
 
 populateFilters();
@@ -277,6 +362,11 @@ function bindEvents() {
   els.designFilter.addEventListener("change", e => { state.design = e.target.value; render(); });
   els.colorFilter.addEventListener("change", e => { state.color = e.target.value; render(); });
   els.cartBtn.addEventListener("click", openCart);
+  els.cartClose.addEventListener("click", closeCart);
+  els.cartOverlay.addEventListener("click", closeCart);
+  els.lightboxClose.addEventListener("click", closeLightbox);
+  els.lightbox.addEventListener("click", e => { if(e.target === els.lightbox) closeLightbox(); });
+  document.addEventListener("keydown", e => { if(e.key === "Escape") { closeLightbox(); closeCart(); } });
 }
 
 function populateFilters() {
@@ -308,19 +398,120 @@ function render() {
   });
 }
 
-
 function renderCard(product) {
   const card = els.cardTemplate.content.cloneNode(true);
-  card.querySelector("img").src = "assets/products/" + encodeURIComponent(product.file);
-  card.querySelector("img").alt = product.name;
+  const img = card.querySelector("img");
+  img.src = "assets/products/" + encodeURIComponent(product.file);
+  img.alt = product.name;
   card.querySelector("h3").textContent = product.name;
   card.querySelector(".product-meta").textContent = `${product.design} / ${product.colorLabel}`;
   card.querySelector(".color-dot").style.background = product.colorHex;
-  const input = card.querySelector("input");
-  input.value = state.prices[product.id] || "";
-  input.dataset.productId = product.id;
-  input.addEventListener("input", e => { state.prices[product.id] = e.target.value; savePrices(); });
+  const price = state.prices[product.id];
+  card.querySelector(".product-price").textContent = price ? `₡ ${price}` : "";
+
+  // Vista previa
+  card.querySelector(".preview-btn").addEventListener("click", () => openLightbox(img.src, product.name));
+  img.style.cursor = "zoom-in";
+  img.addEventListener("click", () => openLightbox(img.src, product.name));
+
+  // Tallas
+  let selectedSize = null;
+  const sizeBtns = card.querySelectorAll(".size-btn");
+  const addBtn = card.querySelector(".add-cart-btn");
+  addBtn.disabled = true;
+  sizeBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      sizeBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedSize = btn.dataset.size;
+      addBtn.disabled = false;
+    });
+  });
+
+  // Agregar al carrito
+  addBtn.addEventListener("click", () => {
+    addToCart(product, selectedSize);
+    addBtn.textContent = "✓ Agregado";
+    addBtn.style.background = "#16a34a";
+    setTimeout(() => { addBtn.textContent = "+ Agregar al carrito"; addBtn.style.background = ""; }, 1500);
+  });
+
   return card;
+}
+
+// Lightbox
+function openLightbox(src, alt) {
+  els.lightboxImg.src = src;
+  els.lightboxImg.alt = alt;
+  els.lightbox.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+function closeLightbox() {
+  els.lightbox.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+// Carrito
+function addToCart(product, size) {
+  const existing = cart.find(i => i.id === product.id && i.size === size);
+  if (existing) { existing.qty++; }
+  else { cart.push({ ...product, size, qty: 1 }); }
+  els.cartCount.textContent = cart.reduce((s, i) => s + i.qty, 0);
+  openCart();
+}
+
+function openCart() {
+  els.cartPanel.classList.remove("hidden");
+  els.cartOverlay.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+  renderCart();
+}
+
+function closeCart() {
+  els.cartPanel.classList.add("hidden");
+  els.cartOverlay.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+function renderCart() {
+  els.cartItems.replaceChildren();
+  if (!cart.length) {
+    const d = document.createElement("div");
+    d.className = "cart-empty";
+    d.textContent = "Tu carrito está vacío.";
+    els.cartItems.append(d);
+    els.cartFooter.innerHTML = "";
+    return;
+  }
+  cart.forEach((item, idx) => {
+    const el = document.createElement("div");
+    el.className = "cart-item";
+    el.innerHTML = `
+      <img src="assets/products/${encodeURIComponent(item.file)}" alt="${item.name}" />
+      <div class="cart-item-info">
+        <p class="ci-name">${item.name}</p>
+        <p class="ci-meta">Talla: ${item.size} &nbsp;·&nbsp; Cant: ${item.qty}</p>
+      </div>
+      <button class="cart-item-remove" data-idx="${idx}">✕</button>`;
+    el.querySelector(".cart-item-remove").addEventListener("click", () => {
+      cart.splice(idx, 1);
+      els.cartCount.textContent = cart.reduce((s, i) => s + i.qty, 0);
+      renderCart();
+    });
+    els.cartItems.append(el);
+  });
+
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  els.cartFooter.innerHTML = `
+    <div class="cart-total"><span>Total prendas</span><span>${total}</span></div>
+    <button class="cart-order-btn" id="orderBtn">Hacer pedido por WhatsApp</button>`;
+  document.querySelector("#orderBtn").addEventListener("click", sendWhatsApp);
+}
+
+function sendWhatsApp() {
+  const lines = cart.map(i => `• ${i.name} | Talla: ${i.size} | Cant: ${i.qty}`).join("\n");
+  const msg = encodeURIComponent(`Hola! Quiero hacer un pedido:\n\n${lines}\n\nQuedo atento.`);
+  window.open(`https://wa.me/?text=${msg}`, "_blank");
 }
 
 function matches(p) {
@@ -374,17 +565,6 @@ function normalize(v) { return v.toLowerCase().normalize("NFD").replace(/[̀-ͯ]
 function titleCase(v) { return v.toLowerCase().split(" ").map(w => w ? w[0].toUpperCase()+w.slice(1) : w).join(" "); }
 function loadPrices() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY))||{}; } catch { return {}; } }
 function savePrices() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.prices)); }
-
-const cart = [];
-
-function openCart() {
-  alert(cart.length ? `Carrito: ${cart.length} producto(s)` : "El carrito está vacío.");
-}
-
-function addToCart(product) {
-  cart.push(product);
-  els.cartCount.textContent = cart.length;
-}
     </script>
   </body>
 </html>
