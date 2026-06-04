@@ -269,10 +269,13 @@ h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25
 const STORAGE_KEY = "imparable-catalog-prices-v1";
 const COLOR_MAP = { blanco:"#ffffff", negro:"#0a0a0a", rojo:"#e81818", rey:"#0066ff", "azul oscuro":"#071733" };
 const DESIGN_ORDER = [
-  "Camiseta Ultra Fit Manga Corta","Camiseta Ultra Fit Manga Larga","Licra Larga","Licra Corta",
-  "Sweater","Pantaloneta Corta Fit","Pantaloneta Corte Basico","Camiseta Basica Algodon",
-  "Camiseta Basica Fit Sin Mangas","Camiseta Imparable","Camiseta Olimpica",
-  "Camiseta Oversize Con Mangas","Camiseta Oversize Sin Mangas","Otros"
+  "Camiseta Ultra Fit Manga Corta","Camiseta Ultra Fit Manga Larga",
+  "Camiseta Basica Algodon","Camiseta Basica Fit Sin Mangas",
+  "Camiseta Imparable","Camiseta Olimpica",
+  "Camiseta Oversize Con Mangas","Camiseta Oversize Sin Mangas",
+  "Pantaloneta Corta Fit","Pantaloneta Corte Basico",
+  "Licra Larga","Licra Corta",
+  "Sweater","Otros"
 ];
 
 const FILES = [
@@ -406,7 +409,8 @@ function render() {
     const thumb = g.querySelector(".group-thumb");
     const grid = g.querySelector(".product-grid");
 
-    thumb.src = "assets/products/" + encodeURIComponent(items[0].file);
+    const reyItem = items.find(p => p.colorLabel === "rey") || items[0];
+    thumb.src = "assets/products/" + encodeURIComponent(reyItem.file);
     thumb.alt = design;
     g.querySelector("h2").textContent = design;
     g.querySelector(".group-count").textContent = `${items.length} producto${items.length===1?"":"s"}`;
