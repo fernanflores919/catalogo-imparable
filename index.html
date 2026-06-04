@@ -77,17 +77,19 @@ h2 { margin-bottom: 2px; color: var(--white); font-size: clamp(16px,3vw,22px); f
 .group-arrow { color: var(--muted); font-size: 12px; transition: transform 0.25s; flex-shrink: 0; }
 .group-heading[aria-expanded="true"] .group-arrow { transform: rotate(90deg); }
 
-.product-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 16px; padding: 0 clamp(18px,4vw,54px) 24px; }
+.product-grid { display: flex; flex-direction: column; padding: 0 clamp(18px,4vw,54px); }
 .product-grid.collapsed { display: none; }
-.product-card { min-width: 0; overflow: hidden; background: var(--panel); border: 1px solid var(--line); }
-.image-wrap { aspect-ratio: 1/1.16; display: grid; place-items: center; background: #0a0a0a; }
-.image-wrap img { width: 100%; height: 100%; object-fit: contain; }
-.product-body { padding: 16px; }
-.product-title-row { display: grid; grid-template-columns: minmax(0,1fr) 18px; align-items: start; gap: 10px; }
-h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25; text-transform: uppercase; }
-.color-dot { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.34); }
-.product-meta { min-height: 22px; margin-bottom: 14px; color: var(--muted); font-size: 13px; font-weight: 700; }
-.price-field input { color: var(--blue); font-size: 22px; font-weight: 900; }
+.group-add-bar { padding: 16px 0 24px; }
+.product-card { background: none; border-bottom: 1px solid var(--line); padding: 14px 0; }
+.card-top { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 10px; }
+.image-wrap { width: 80px; height: 80px; flex-shrink: 0; background: #0a0a0a; border: 1px solid var(--line); position: relative; }
+.image-wrap img { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
+.card-color-info { flex: 1; min-width: 0; padding-top: 4px; }
+.product-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+h3 { margin: 0; color: var(--white); font-size: 14px; line-height: 1.3; text-transform: uppercase; font-weight: 800; }
+.color-dot { width: 14px; height: 14px; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.34); border-radius: 50%; }
+.product-meta { display: none; }
+.product-price { color: var(--blue); font-size: 16px; font-weight: 900; margin: 0; }
 .empty-state { padding: 50px; color: var(--muted); border: 1px solid var(--line); text-align: center; }
 
 /* Preview button */
@@ -213,37 +215,38 @@ h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25
           </div>
           <span class="group-arrow">▶</span>
         </button>
-        <div class="product-grid collapsed"></div>
+        <div class="product-grid collapsed">
+          <div class="group-add-bar">
+            <button class="add-cart-btn group-add-btn" type="button">+ Agregar al carrito</button>
+          </div>
+        </div>
       </section>
     </template>
 
     <template id="cardTemplate">
       <article class="product-card">
-        <div class="image-wrap">
-          <img loading="lazy" alt="" />
-          <button class="preview-btn" type="button" title="Ver imagen">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </button>
-        </div>
-        <div class="product-body">
-          <div class="product-title-row">
-            <h3></h3>
-            <span class="color-dot"></span>
+        <div class="card-top">
+          <div class="image-wrap">
+            <img loading="lazy" alt="" />
+            <button class="preview-btn" type="button" title="Ver imagen">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </button>
           </div>
-          <p class="product-meta"></p>
-          <p class="product-price"></p>
-          <div class="size-row">
-            <span class="size-label">Talla y cantidad</span>
-            <div class="size-qty-grid">
-              <div class="size-qty-row" data-size="XS"><span>XS</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
-              <div class="size-qty-row" data-size="S"><span>S</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
-              <div class="size-qty-row" data-size="M"><span>M</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
-              <div class="size-qty-row" data-size="L"><span>L</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
-              <div class="size-qty-row" data-size="XL"><span>XL</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
-              <div class="size-qty-row" data-size="XXL"><span>XXL</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+          <div class="card-color-info">
+            <div class="product-title-row">
+              <h3></h3>
+              <span class="color-dot"></span>
             </div>
+            <p class="product-price"></p>
           </div>
-          <button class="add-cart-btn" type="button">+ Agregar al carrito</button>
+        </div>
+        <div class="size-qty-grid">
+          <div class="size-qty-row" data-size="XS"><span>XS</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+          <div class="size-qty-row" data-size="S"><span>S</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+          <div class="size-qty-row" data-size="M"><span>M</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+          <div class="size-qty-row" data-size="L"><span>L</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+          <div class="size-qty-row" data-size="XL"><span>XL</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+          <div class="size-qty-row" data-size="XXL"><span>XXL</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
         </div>
       </article>
     </template>
@@ -419,9 +422,33 @@ function render() {
       const expanded = heading.getAttribute("aria-expanded") === "true";
       heading.setAttribute("aria-expanded", !expanded);
       grid.classList.toggle("collapsed", expanded);
-      // Lazy render products on first open
-      if (!expanded && grid.children.length === 0) {
-        items.forEach(p => grid.append(renderCard(p)));
+      if (!expanded && grid.querySelectorAll(".product-card").length === 0) {
+        items.forEach(p => grid.insertBefore(renderCard(p), grid.querySelector(".group-add-bar")));
+        // Botón único por familia
+        grid.querySelector(".group-add-btn").addEventListener("click", (e) => {
+          const btn = e.currentTarget;
+          const cards = grid.querySelectorAll(".product-card");
+          let added = 0;
+          cards.forEach(card => {
+            const productId = card.dataset.productId;
+            const product = products.find(p => p.id === productId);
+            card.querySelectorAll(".size-qty-row").forEach(row => {
+              const qty = parseInt(row.querySelector(".qty-val").textContent);
+              if (qty > 0) { addToCart(product, row.dataset.size, qty); added++; }
+            });
+          });
+          if (added === 0) {
+            btn.textContent = "⚠ Selecciona cantidades";
+            btn.style.background = "#e81818";
+          } else {
+            // Reset todos los qty
+            grid.querySelectorAll(".qty-val").forEach(v => v.textContent = "0");
+            grid.querySelectorAll(".size-qty-row").forEach(r => r.classList.remove("active"));
+            btn.textContent = "✓ Agregado al carrito";
+            btn.style.background = "#16a34a";
+          }
+          setTimeout(() => { btn.textContent = "+ Agregar al carrito"; btn.style.background = ""; }, 2000);
+        });
       }
     });
 
@@ -431,59 +458,34 @@ function render() {
 
 function renderCard(product) {
   const card = els.cardTemplate.content.cloneNode(true);
+  const article = card.querySelector("article");
+  article.dataset.productId = product.id;
+
   const img = card.querySelector("img");
   img.src = "assets/products/" + encodeURIComponent(product.file);
   img.alt = product.name;
-  card.querySelector("h3").textContent = product.name;
-  card.querySelector(".product-meta").textContent = `${product.design} / ${product.colorLabel}`;
+  card.querySelector("h3").textContent = titleCase(product.colorLabel);
   card.querySelector(".color-dot").style.background = product.colorHex;
   const price = state.prices[product.id];
   card.querySelector(".product-price").textContent = price ? `₡ ${price}` : "";
 
   // Vista previa
   card.querySelector(".preview-btn").addEventListener("click", () => openLightbox(img.src, product.name));
-  img.style.cursor = "zoom-in";
   img.addEventListener("click", () => openLightbox(img.src, product.name));
 
-  // Tallas + cantidades
-  const addBtn = card.querySelector(".add-cart-btn");
-  const sizeRow = card.querySelector(".size-row");
-  const sizeQtyRows = card.querySelectorAll(".size-qty-row");
-
-  sizeQtyRows.forEach(row => {
-    const minus = row.querySelector(".qty-minus");
-    const plus = row.querySelector(".qty-plus");
+  // Tallas +/-
+  card.querySelectorAll(".size-qty-row").forEach(row => {
     const val = row.querySelector(".qty-val");
-    plus.addEventListener("click", () => {
+    row.querySelector(".qty-plus").addEventListener("click", () => {
       const n = parseInt(val.textContent) + 1;
       val.textContent = n;
       row.classList.toggle("active", n > 0);
     });
-    minus.addEventListener("click", () => {
+    row.querySelector(".qty-minus").addEventListener("click", () => {
       const n = Math.max(0, parseInt(val.textContent) - 1);
       val.textContent = n;
       row.classList.toggle("active", n > 0);
     });
-  });
-
-  // Agregar al carrito
-  addBtn.addEventListener("click", () => {
-    const selections = [];
-    sizeQtyRows.forEach(row => {
-      const qty = parseInt(row.querySelector(".qty-val").textContent);
-      if (qty > 0) selections.push({ size: row.dataset.size, qty });
-    });
-    if (!selections.length) {
-      sizeRow.style.outline = "2px solid #e81818";
-      setTimeout(() => { sizeRow.style.outline = ""; }, 1500);
-      return;
-    }
-    selections.forEach(s => addToCart(product, s.size, s.qty));
-    // Reset
-    sizeQtyRows.forEach(row => { row.querySelector(".qty-val").textContent = "0"; row.classList.remove("active"); });
-    addBtn.textContent = "✓ Agregado";
-    addBtn.style.background = "#16a34a";
-    setTimeout(() => { addBtn.textContent = "+ Agregar al carrito"; addBtn.style.background = ""; }, 1500);
   });
 
   return card;
