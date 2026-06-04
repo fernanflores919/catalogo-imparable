@@ -94,10 +94,16 @@ h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25
 
 /* Tallas */
 .size-row { margin-bottom: 12px; }
-.size-label { display: block; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
-.size-options { display: flex; gap: 6px; flex-wrap: wrap; }
-.size-btn { min-width: 36px; height: 34px; padding: 0 6px; background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 800; cursor: pointer; }
-.size-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+.size-label { display: block; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+.size-qty-grid { display: flex; flex-direction: column; gap: 4px; }
+.size-qty-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; background: var(--panel-2); border: 1px solid var(--line); }
+.size-qty-row.active { border-color: var(--blue); }
+.size-qty-row > span { color: var(--white); font-size: 13px; font-weight: 800; width: 32px; }
+.qty-ctrl { display: flex; align-items: center; gap: 10px; }
+.qty-minus, .qty-plus { width: 28px; height: 28px; background: var(--panel); border: 1px solid var(--line); color: var(--white); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.qty-plus:hover { background: var(--blue); border-color: var(--blue); }
+.qty-minus:hover { background: #333; }
+.qty-val { color: var(--white); font-size: 15px; font-weight: 900; min-width: 20px; text-align: center; }
 
 /* Add to cart */
 .add-cart-btn { width: 100%; padding: 12px; background: var(--blue); border: none; color: #fff; font-size: 14px; font-weight: 900; cursor: pointer; letter-spacing: 0.05em; }
@@ -220,14 +226,14 @@ h3 { margin-bottom: 8px; color: var(--white); font-size: 16px; line-height: 1.25
           <p class="product-meta"></p>
           <p class="product-price"></p>
           <div class="size-row">
-            <span class="size-label">Talla</span>
-            <div class="size-options">
-              <button class="size-btn" data-size="XS">XS</button>
-              <button class="size-btn" data-size="S">S</button>
-              <button class="size-btn" data-size="M">M</button>
-              <button class="size-btn" data-size="L">L</button>
-              <button class="size-btn" data-size="XL">XL</button>
-              <button class="size-btn" data-size="XXL">XXL</button>
+            <span class="size-label">Talla y cantidad</span>
+            <div class="size-qty-grid">
+              <div class="size-qty-row" data-size="XS"><span>XS</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+              <div class="size-qty-row" data-size="S"><span>S</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+              <div class="size-qty-row" data-size="M"><span>M</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+              <div class="size-qty-row" data-size="L"><span>L</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+              <div class="size-qty-row" data-size="XL"><span>XL</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
+              <div class="size-qty-row" data-size="XXL"><span>XXL</span><div class="qty-ctrl"><button type="button" class="qty-minus">−</button><span class="qty-val">0</span><button type="button" class="qty-plus">+</button></div></div>
             </div>
           </div>
           <button class="add-cart-btn" type="button">+ Agregar al carrito</button>
@@ -414,30 +420,42 @@ function renderCard(product) {
   img.style.cursor = "zoom-in";
   img.addEventListener("click", () => openLightbox(img.src, product.name));
 
-  // Tallas
-  let selectedSize = null;
-  const sizeBtns = card.querySelectorAll(".size-btn");
+  // Tallas + cantidades
   const addBtn = card.querySelector(".add-cart-btn");
   const sizeRow = card.querySelector(".size-row");
+  const sizeQtyRows = card.querySelectorAll(".size-qty-row");
 
-  sizeBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      sizeBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      selectedSize = btn.dataset.size;
-      sizeRow.style.outline = "";
+  sizeQtyRows.forEach(row => {
+    const minus = row.querySelector(".qty-minus");
+    const plus = row.querySelector(".qty-plus");
+    const val = row.querySelector(".qty-val");
+    plus.addEventListener("click", () => {
+      const n = parseInt(val.textContent) + 1;
+      val.textContent = n;
+      row.classList.toggle("active", n > 0);
+    });
+    minus.addEventListener("click", () => {
+      const n = Math.max(0, parseInt(val.textContent) - 1);
+      val.textContent = n;
+      row.classList.toggle("active", n > 0);
     });
   });
 
   // Agregar al carrito
   addBtn.addEventListener("click", () => {
-    if (!selectedSize) {
+    const selections = [];
+    sizeQtyRows.forEach(row => {
+      const qty = parseInt(row.querySelector(".qty-val").textContent);
+      if (qty > 0) selections.push({ size: row.dataset.size, qty });
+    });
+    if (!selections.length) {
       sizeRow.style.outline = "2px solid #e81818";
-      sizeRow.style.padding = "6px";
-      setTimeout(() => { sizeRow.style.outline = ""; sizeRow.style.padding = ""; }, 1500);
+      setTimeout(() => { sizeRow.style.outline = ""; }, 1500);
       return;
     }
-    addToCart(product, selectedSize);
+    selections.forEach(s => addToCart(product, s.size, s.qty));
+    // Reset
+    sizeQtyRows.forEach(row => { row.querySelector(".qty-val").textContent = "0"; row.classList.remove("active"); });
     addBtn.textContent = "✓ Agregado";
     addBtn.style.background = "#16a34a";
     setTimeout(() => { addBtn.textContent = "+ Agregar al carrito"; addBtn.style.background = ""; }, 1500);
@@ -459,10 +477,10 @@ function closeLightbox() {
 }
 
 // Carrito
-function addToCart(product, size) {
+function addToCart(product, size, qty) {
   const existing = cart.find(i => i.id === product.id && i.size === size);
-  if (existing) { existing.qty++; }
-  else { cart.push({ ...product, size, qty: 1 }); }
+  if (existing) { existing.qty += qty; }
+  else { cart.push({ ...product, size, qty }); }
   els.cartCount.textContent = cart.reduce((s, i) => s + i.qty, 0);
   openCart();
 }
