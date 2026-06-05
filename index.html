@@ -98,6 +98,8 @@ button, input, select { font: inherit; }
 .product-order-col {}
 .product-title { color: var(--white); font-size: clamp(20px,4vw,32px); font-weight: 900; text-transform: uppercase; margin-bottom: 6px; line-height: 1.2; }
 .product-subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+.product-price-tag { color: var(--blue); font-size: 28px; font-weight: 900; margin: 4px 0 8px; }
+.family-price { color: var(--blue); font-size: 14px; font-weight: 900; margin: 4px 0 0; }
 
 /* ── COLOR ACCORDION ── */
 .color-accordion { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
@@ -234,6 +236,24 @@ const DESIGN_ORDER = [
 
 // Orden fijo de colores en todas las familias
 const COLOR_ORDER = ["negro","blanco","rojo","rey","azul oscuro","sin color"];
+
+// Precios al detalle por familia (₡)
+const DESIGN_PRICES = {
+  "Camiseta Ultra Fit Manga Corta":  14900,
+  "Camiseta Ultra Fit Manga Larga":  16900,
+  "Camiseta Basica Algodon":         12900,
+  "Camiseta Basica Fit Sin Mangas":  11900,
+  "Camiseta Imparable":              12900,
+  "Camiseta Olimpica":               11900,
+  "Camiseta Oversize Con Mangas":    14900,
+  "Camiseta Oversize Sin Mangas":    12900,
+  "Pantaloneta Corta Fit":           12900,
+  "Pantaloneta Corte Basico":        14900,
+  "Jogger":                          22900,
+  "Licra Larga":                     17900,
+  "Licra Corta":                     14900,
+  "Sweater":                         22900,
+};
 
 const FILES = [
   "Camiseta basica algodon azul oscuro imparable.png",
@@ -384,11 +404,13 @@ function renderCatalog() {
     const reyImg = (items.find(p => p.colorLabel==="rey") || items[0]).file;
     const card = document.createElement("div");
     card.className = "family-card";
+    const price = DESIGN_PRICES[design];
     card.innerHTML = `
       <div class="family-card-img"><img src="assets/products/${encodeURIComponent(reyImg)}" alt="${design}" loading="lazy" /></div>
       <div class="family-card-body">
         <h3>${design}</h3>
         <span>${items.length} color${items.length===1?"":"es"}</span>
+        ${price ? `<p class="family-price">₡ ${price.toLocaleString("es-CR")}</p>` : ""}
       </div>`;
     card.addEventListener("click", () => showProduct(design, items));
     grid.append(card);
@@ -448,7 +470,11 @@ function showProduct(design, items) {
   // ── Columna pedido ──
   const orderCol = document.createElement("div");
   orderCol.className = "product-order-col";
-  orderCol.innerHTML = `<h2 class="product-title">${design}</h2><p class="product-subtitle">${items.length} color${items.length===1?"":"es"} disponible${items.length===1?"":"s"}</p>`;
+  const designPrice = DESIGN_PRICES[design];
+  orderCol.innerHTML = `
+    <h2 class="product-title">${design}</h2>
+    ${designPrice ? `<p class="product-price-tag">₡ ${designPrice.toLocaleString("es-CR")}</p>` : ""}
+    <p class="product-subtitle">${items.length} color${items.length===1?"":"es"} disponible${items.length===1?"":"s"}</p>`;
 
   // Acordeon: colores desplegables
   const accordion = document.createElement("div");
