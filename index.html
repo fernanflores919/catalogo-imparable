@@ -636,6 +636,10 @@ function renderCart() {
     const lines = cart.map(i => `• ${i.design} | ${cap(i.colorLabel)} | Talla ${i.size} | ${i.qty} ud.`).join("\n");
     const msg = encodeURIComponent(`Hola! Quiero hacer un pedido:\n\n${lines}\n\n¡Gracias!`);
     window.open(`https://wa.me/?text=${msg}`, "_blank");
+    // Vaciar carrito tras enviar
+    cart.splice(0, cart.length);
+    document.getElementById("cartCount").textContent = "0";
+    closeCart();
   });
 }
 
